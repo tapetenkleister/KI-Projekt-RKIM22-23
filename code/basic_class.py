@@ -15,7 +15,7 @@ class BasicImageClass():
     order of data points.
     """
 
-    def __init__(self, dir_path: str = "data/pictures_tobi_w_timo/pictures", scale_fact: float = 0.1) -> None:
+    def __init__(self, dir_path: str = "data", scale_fact: float = 0.1) -> None:
         self._dir_path = dir_path
         self._scale_fact = scale_fact
         self._label_dict = {

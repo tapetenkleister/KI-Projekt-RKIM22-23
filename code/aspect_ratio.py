@@ -12,7 +12,7 @@ AspectRatio = TypeVar('AspectRatio')
 
 
 class AspectRatioGenerator(BasicImageClass):
-    def __init__(self, dir_path: str = "data/pictures_tobi_w_timo/pictures", scale_fact: float = 0.1) -> None:
+    def __init__(self, dir_path: str = "data", scale_fact: float = 0.1) -> None:
         super().__init__(dir_path, scale_fact)
 
     def process_images(self, show_debug_info: bool = False, max_num_images: int = sys.maxsize, load_folder: list[str] = ["all"]) -> tuple[list[int, int, int, int], list[AspectRatio]]:

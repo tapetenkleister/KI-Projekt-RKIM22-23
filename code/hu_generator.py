@@ -19,7 +19,7 @@ def hu_rearrange(moment_array):
 
 
 class HU_Generator(BasicImageClass):
-    def __init__(self, dir_path: str = "data/pictures_tobi_w_timo/pictures", scale_fact: float = 0.1) -> None:
+    def __init__(self, dir_path: str = "data", scale_fact: float = 0.1) -> None:
         super().__init__(dir_path, scale_fact)
 
     def hu_moment_process(self, show_debug_info: bool = False) -> list[float, float, float, float, float, float, float]:
@@ -33,12 +33,12 @@ class HU_Generator(BasicImageClass):
             A List of 7 Hu values for each processed image.
         """
         # Load all the images
-        images, _labels = self._load_images()
+        images, _labels = self._load_images(max_num_images=10)
 
         
         aspect_ratio_gen = AspectRatioGenerator()
         x_y_w_h = aspect_ratio_gen.process_images(
-        show_debug_info=False)[0]
+        show_debug_info=False,max_num_images=10)[0]
 
         #print("Postion und Höhe breite",x_y_w_h)
         # Cropping an image  
