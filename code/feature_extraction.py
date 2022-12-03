@@ -6,7 +6,8 @@ import csv
 from typing import TypeVar
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+from aspect_ratio_extract import aspect_ratio_extract
+from hu_generator import hu_moment_extract
 Image = TypeVar('Image')
 ImageLabel = TypeVar('ImageLabel')
 
@@ -38,45 +39,59 @@ class BeerBottle():
         Returns
         -------
         """
-
-        feature_csv= open('feature_list.csv', 'w')
+        folder_stop = False
+        feature_csv = open('analysis/feature_list.csv', 'w')
         feature_row = []
-        header = ['Aspect Ratio', 'Hu_01', 'Hu_02', 'Hu_03', 'Cap_Hu_01', 'Cap_Hu_02', 'Cap_Hu_03','Ring','Label']
+        header = ['Aspect Ratio', 'Hu_0', 'Hu_1', 'Hu_2', 'Cap_Hu_0', 'Cap_Hu_1', 'Cap_Hu_2','Label']
         nb_image = 0
 
         folder_list = os.listdir(
             self._dir_path) if load_folder[0] == "all" else load_folder
 
         for labeled_folder in folder_list:
-            if debug:
+            if True:
                     print('Folder: ',labeled_folder)
 
             for image_path in os.listdir(self._dir_path + '/' + labeled_folder):
-                image = cv2.imread(self._dir_path + '/' +
-                                   labeled_folder + '/' + image_path)
-                height, width, _colour_channels = image.shape
-                image = cv2.resize(
-                    image, (int(width*self._scale_fact), int(height*self._scale_fact)), interpolation=cv2.INTER_AREA)
-                scaled_height, scaled_width, _colour_channels = image.shape
-                # call functions to extract a feature from a single image
-                
+                try:
+                    if True:
+                        print('Image No:',nb_image+1)
+                    image = cv2.imread(self._dir_path + '/' +
+                                    labeled_folder + '/' + image_path)
+               
+                    height, width, _colour_channels = image.shape
+                    image = cv2.resize(
+                        image, (int(width*self._scale_fact), int(height*self._scale_fact)), interpolation=cv2.INTER_AREA)
+                    scaled_height, scaled_width, _colour_channels = image.shape
+
+                    # call functions to extract a feature from a single image
+                    x_y_w_h,aspect_ratio = aspect_ratio_extract(image,debug=False)
+                    hu_moment_list = hu_moment_extract(image,x_y_w_h, top_part=0.0, debug=False)
+                    cap_hu_moment_list = hu_moment_extract(image, x_y_w_h, top_part=0.6, debug=False)
 
 
 
 
-                #append all features to the row that is to be added
-                feature_row.append([height,scaled_height])
 
 
-                if debug:
-                    print('Image No:',nb_image)
+
+
+                    #append all features to the row that is to be added
+                    feature_row.append([aspect_ratio,hu_moment_list[0],hu_moment_list[1],hu_moment_list[2],
+                        cap_hu_moment_list[0],cap_hu_moment_list[1],cap_hu_moment_list[2],labeled_folder])
                     
-            #stopping condition based on the given argument max_num_images   
-                if nb_image>=max_num_images-1:
-                    folder_stop = True
+
+
+                    
+                        
+                #stopping condition based on the given argument max_num_images   
+                    if nb_image>=max_num_images-1:
+                        folder_stop = True
+                        break
+                    nb_image += 1
+                except:
+                    print("Error at image no:",nb_image+1)
                     break
-                nb_image += 1
-            
             if folder_stop:
                 break
 
@@ -168,5 +183,5 @@ class BeerBottle():
         plt.show()
 
 
-test = BeerBottle(scale_fact= 0.1)
-test.processing(max_num_images=10, debug= True)
+test = BeerBottle(scale_fact= 0.3)
+test.processing(max_num_images=1000, debug= False)
