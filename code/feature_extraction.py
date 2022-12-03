@@ -1,6 +1,7 @@
 from __future__ import annotations
 import cv2
 import os
+import datetime
 import sys
 import csv
 from typing import TypeVar
@@ -10,7 +11,7 @@ from aspect_ratio_extract import aspect_ratio_extract
 from hu_generator import hu_moment_extract
 Image = TypeVar('Image')
 ImageLabel = TypeVar('ImageLabel')
-
+Current_Date = datetime.datetime.today().strftime ('%d_%b_%Y_%H_%M_%S')
 
 class BeerBottle():
     """Base class used to create a generator class specific to every feature. Classes inheriting from this class are ensured to use the same
@@ -183,5 +184,10 @@ class BeerBottle():
         plt.show()
 
 
+
 test = BeerBottle(scale_fact= 0.3)
-test.processing(max_num_images=1000, debug= False)
+test.processing(max_num_images=2, debug= False)
+
+os.rename(r'analysis/feature_list.csv',r'analysis/feature_list_' + str(Current_Date) + '.csv')
+
+
