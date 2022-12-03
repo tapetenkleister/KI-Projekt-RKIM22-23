@@ -8,7 +8,7 @@ from typing import TypeVar
 import matplotlib.pyplot as plt
 import seaborn as sns
 from aspect_ratio_extract import aspect_ratio_extract
-from hu_generator import hu_moment_extract
+from hu_moment_extract import hu_moment_extract
 Image = TypeVar('Image')
 ImageLabel = TypeVar('ImageLabel')
 Current_Date = datetime.datetime.today().strftime ('%d_%b_%Y_%H_%M_%S')
