@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from aspect_ratio_extract import aspect_ratio_extract
 from hu_moment_extract import hu_moment_extract
+from vertical_line_extract import vertical_line_extract
 Image = TypeVar('Image')
 ImageLabel = TypeVar('ImageLabel')
 Current_Date = datetime.datetime.today().strftime ('%d_%b_%Y_%H_%M_%S')
@@ -69,8 +70,7 @@ class BeerBottle():
                     x_y_w_h,aspect_ratio = aspect_ratio_extract(image,debug=False)
                     hu_moment_list = hu_moment_extract(image,x_y_w_h, top_part=0.0, debug=False)
                     cap_hu_moment_list = hu_moment_extract(image, x_y_w_h, top_part=0.6, debug=False)
-
-
+                    
 
 
 
@@ -186,7 +186,7 @@ class BeerBottle():
 
 
 test = BeerBottle(scale_fact= 0.3)
-test.processing(max_num_images=2, debug= False)
+test.processing(max_num_images=1000, debug= False)
 
 os.rename(r'analysis/feature_list.csv',r'analysis/feature_list_' + str(Current_Date) + '.csv')
 
