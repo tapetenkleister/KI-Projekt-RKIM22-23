@@ -41,9 +41,11 @@ class BeerBottle():
         Returns
         -------
         """
+
         folder_stop = False
         feature_csv = open('analysis/feature_list.csv', 'w')
         feature_row = []
+
         header = ['Aspect Ratio', 'Hu_0', 'Hu_1', 'Hu_2', 'Cap_Hu_0', 'Cap_Hu_1', 'Cap_Hu_2','Label']
         nb_image = 0
 
@@ -69,7 +71,7 @@ class BeerBottle():
                     # call functions to extract a feature from a single image
                     x_y_w_h,aspect_ratio = aspect_ratio_extract(image,debug=False)
                     hu_moment_list = hu_moment_extract(image,x_y_w_h, top_part=0.0, debug=False)
-                    cap_hu_moment_list = hu_moment_extract(image, x_y_w_h, top_part=0.6, debug=False)
+                    cap_hu_moment_list = hu_moment_extract(image, x_y_w_h, top_part=0.3, debug=False)
                     
 
 
@@ -185,7 +187,7 @@ class BeerBottle():
 
 
 
-test = BeerBottle(scale_fact= 0.3)
+test = BeerBottle(scale_fact= 0.8)
 test.processing(max_num_images=1000, debug= False)
 
 os.rename(r'analysis/feature_list.csv',r'analysis/feature_list_' + str(Current_Date) + '.csv')
