@@ -58,8 +58,8 @@ class BeerBottle():
 
             for image_path in os.listdir(self._dir_path + '/' + labeled_folder):
                 try:
-                    if True:
-                        print('Image No:',nb_image+1)
+                    
+                    print('Image No:',nb_image+1)
                     image = cv2.imread(self._dir_path + '/' +
                                     labeled_folder + '/' + image_path)
                
@@ -96,6 +96,7 @@ class BeerBottle():
                     print("Error at image no:",nb_image+1)
                     break
             if folder_stop:
+                print('Finished')
                 break
 
         #write all extracted features into the csv file for further examination
@@ -188,7 +189,7 @@ class BeerBottle():
 
 
 test = BeerBottle(scale_fact= 0.8)
-test.processing(max_num_images=1000, debug= False)
+test.processing(max_num_images=1200, debug= False)
 
 os.rename(r'analysis/feature_list.csv',r'analysis/feature_list_' + str(Current_Date) + '.csv')
 
