@@ -72,11 +72,6 @@ class BeerBottle():
                     x_y_w_h,aspect_ratio = aspect_ratio_extract(image,debug=False)
                     hu_moment_list = hu_moment_extract(image,x_y_w_h, top_part=0.0, debug=False)
                     cap_hu_moment_list = hu_moment_extract(image, x_y_w_h, top_part=0.3, debug=False)
-                    
-
-
-
-
 
 
                     #append all features to the row that is to be added
@@ -93,12 +88,13 @@ class BeerBottle():
                         break
                     nb_image += 1
                 except:
-                    print("Error at image no:",nb_image+1)
+                    print("Error at image no:",nb_image+1,image_path)
                     break
             if folder_stop:
-                print('Finished')
+                print('Finished with maximum number of images')
                 break
-
+            else: 
+                print('Finished because running out of images')      
         #write all extracted features into the csv file for further examination
         write = csv.writer(feature_csv,delimiter=',')   
         write.writerow(header)    
@@ -106,90 +102,8 @@ class BeerBottle():
         feature_csv.close()
 
 
-
-
-
-
-
-    def _crop_image(self, image: Image, x: int, y: int, w: int, h: int) -> Image:
-        """Crops an input image to the given parameters.
-
-        Parameters
-        ----------
-        image : Image
-            The image to crop
-        x : int
-            x-coordinate of the upper-left corner of the new image border
-        y : int
-            y-coordinate of the upper-left corner of the new image border
-        w : int
-            width to crop (direction: from left to right)
-        h : int
-            height to crop (direction: from up to down)
-
-        Returns
-        -------
-        Image
-            Cropped image
-        """
-        image = image[int(y):int(y+h), int(x):int(x+w)]
-        return image
-
-    def _pairplot_df(self, dataframe) -> None:
-        """Pairplots a given dataframe
-
-        Parameters
-        ----------
-        data_frame : DataFrame
-            Dataframe consisting of atleast two columns, one of them needs to be called "label" and must contain the labels.
-        """
-        sns.set_theme(style="ticks")
-        plot = sns.pairplot(dataframe, hue="label", palette="tab10")
-        plt.show()
-
-    def _scatterplot_df(self, dataframe,  x: str = "label", y: str = None, hue: str = "label") -> None:
-        """Scatterplots a given dataframe
-
-        Parameters
-        ----------
-        dataframe : DataFrame
-            Dataframe consisting of two columns, one of them needs to be called "label" and must contain the labels.
-        """
-        sns.set_theme(style="ticks")
-        plot = sns.scatterplot(dataframe, y=y, x=x,
-                               hue=hue, palette="tab10")
-        plt.show()
-
-    def _boxplot_df(self, dataframe, x: str = "label", y: str = None, hue: str = "label") -> None:
-        """Boxplots a given dataframe
-
-        Parameters
-        ----------
-        dataframe : DataFrame
-            Dataframe consisting of two columns, one of them needs to be called "label" and must contain the labels.
-        """
-        sns.set_theme(style="ticks")
-        plot = sns.boxplot(dataframe, y=y, x=x,
-                           hue=hue, palette="tab10")
-        plt.show()
-
-    def _displot_df(self, dataframe, x: str = None, hue: str = "label") -> None:
-        """Distplots a given dataframe
-
-        Parameters
-        ----------
-        dataframe : DataFrame
-            Dataframe consisting of two columns, one of them needs to be called "label" and must contain the labels.
-        """
-        sns.set_theme(style="ticks")
-        plot = sns.displot(dataframe, x=x, hue=hue,
-                           palette="tab10", col="label", multiple="stack")
-        plt.show()
-
-
-
-test = BeerBottle(scale_fact= 0.8)
-test.processing(max_num_images=1200, debug= False)
+test = BeerBottle(scale_fact= 0.6)
+test.processing(max_num_images=2000, debug= False)
 
 os.rename(r'analysis/feature_list.csv',r'analysis/feature_list_' + str(Current_Date) + '.csv')
 

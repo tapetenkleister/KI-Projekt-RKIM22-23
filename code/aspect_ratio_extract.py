@@ -72,5 +72,3 @@ def aspect_ratio_extract(image : np.ndarray, debug : bool) :
         cv2.destroyAllWindows()
 
     return x_y_w_h, aspect_ratio
-
-
