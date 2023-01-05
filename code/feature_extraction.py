@@ -9,7 +9,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from aspect_ratio_extract import aspect_ratio_extract
 from hu_moment_extract import hu_moment_extract
-from vertical_line_extract import vertical_line_extract
+from crop_save import cropper
+from seal_area import seal_area_extract
 Image = TypeVar('Image')
 ImageLabel = TypeVar('ImageLabel')
 Current_Date = datetime.datetime.today().strftime ('%d_%b_%Y_%H_%M_%S')
@@ -72,10 +73,11 @@ class BeerBottle():
                     x_y_w_h,aspect_ratio = aspect_ratio_extract(image,debug=False)
                     hu_moment_list = hu_moment_extract(image,x_y_w_h, top_part=0.0, debug=False)
                     cap_hu_moment_list = hu_moment_extract(image, x_y_w_h, top_part=0.3, debug=False)
-
+                    cropper(image, x_y_w_h,top_part=0.0,folder=labeled_folder,number=nb_image)
+                    #seal_area = seal_area_extract(image, x_y_w_h, top_part=0.3, debug=False)
 
                     #append all features to the row that is to be added
-                    feature_row.append([aspect_ratio,hu_moment_list[0],hu_moment_list[1],hu_moment_list[2],
+                    feature_row.append([aspect_ratio, hu_moment_list[0],hu_moment_list[1],hu_moment_list[2],
                         cap_hu_moment_list[0],cap_hu_moment_list[1],cap_hu_moment_list[2],labeled_folder])
                     
 
@@ -87,22 +89,23 @@ class BeerBottle():
                         folder_stop = True
                         break
                     nb_image += 1
-                except:
+                except Exception as e:
+                    print(e)
                     print("Error at image no:",nb_image+1,image_path)
                     break
             if folder_stop:
                 print('Finished with maximum number of images')
                 break
             else: 
-                print('Finished because running out of images')      
+                print('Finished because running out of images or error')      
         #write all extracted features into the csv file for further examination
         write = csv.writer(feature_csv,delimiter=',')   
         write.writerow(header)    
         write.writerows(feature_row)    
         feature_csv.close()
+    
 
-
-test = BeerBottle(scale_fact= 0.6)
+test = BeerBottle(dir_path = "data",scale_fact= 0.2   )
 test.processing(max_num_images=2000, debug= False)
 
 os.rename(r'analysis/feature_list.csv',r'analysis/feature_list_' + str(Current_Date) + '.csv')

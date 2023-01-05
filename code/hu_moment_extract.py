@@ -13,7 +13,7 @@ def hu_rearrange(moment_array):
     return moment_array
 
 def hu_moment_extract(image, x_y_w_h : list[int,int,int,int],top_part : float = 0.0, debug: bool = False) -> list[float, float, float, float, float, float, float]:
-    """Returns 7 HU values already scaled to a similar number region
+    """Returns 7 HU values already scaled to a similar number region and absolute value
     ----------
     x_y_w_h : list[int,int,int,int]
         Information necessary for cropping out just the bottle
