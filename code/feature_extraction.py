@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from aspect_ratio_extract import aspect_ratio_extract
 from hu_moment_extract import hu_moment_extract
-from crop_save import cropper
+from cropper import cropper
 from seal_area import seal_area_extract
 Image = TypeVar('Image')
 ImageLabel = TypeVar('ImageLabel')
@@ -70,10 +70,9 @@ class BeerBottle():
                     scaled_height, scaled_width, _colour_channels = image.shape
 
                     # call functions to extract a feature from a single image
-                    x_y_w_h,aspect_ratio = aspect_ratio_extract(image,debug=False)
+                    x_y_w_h,aspect_ratio = aspect_ratio_extract(image,debug=True)
                     hu_moment_list = hu_moment_extract(image,x_y_w_h, top_part=0.0, debug=False)
                     cap_hu_moment_list = hu_moment_extract(image, x_y_w_h, top_part=0.3, debug=False)
-                    cropper(image, x_y_w_h,top_part=0.0,folder=labeled_folder,number=nb_image)
                     #seal_area = seal_area_extract(image, x_y_w_h, top_part=0.3, debug=False)
 
                     #append all features to the row that is to be added
@@ -105,7 +104,7 @@ class BeerBottle():
         feature_csv.close()
     
 
-test = BeerBottle(dir_path = "data",scale_fact= 0.2   )
+test = BeerBottle(dir_path = "test_images",scale_fact= 0.5   )
 test.processing(max_num_images=2000, debug= False)
 
 os.rename(r'analysis/feature_list.csv',r'analysis/feature_list_' + str(Current_Date) + '.csv')

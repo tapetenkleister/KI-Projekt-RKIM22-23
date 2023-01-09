@@ -21,10 +21,10 @@ def aspect_ratio_extract(image : np.ndarray, debug : bool) :
     # Converts the BGR color space of the image to the HSV color space
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
           
-
-    # Threshold of brown in HSV space
-    lower_brown = np.array([1, 30, 0])
-    upper_brown = np.array([40, 255, 90])
+    blur = cv2.blur(hsv,(7,7))
+    # Threshold of dark objects in HSV space H S V
+    lower_brown = np.array([1, 20, 0])
+    upper_brown = np.array([180, 255, 95])
 
     # Find brown shades inside the image and display them as white in front of a black background
     mask = cv2.inRange(hsv, lower_brown, upper_brown)
@@ -32,16 +32,19 @@ def aspect_ratio_extract(image : np.ndarray, debug : bool) :
 
     # Dilate the image
     kernel_3 = np.ones((3, 3), np.uint8)
-    dilation = cv2.dilate(mask, kernel_3, iterations=3)
+    #dilation = cv2.dilate(mask, kernel_3, iterations=3)
                 
+    
+
 
     # Dilate and erode the image to close small holes inside the object
-    kernel_5 = np.ones((3, 3), np.uint8)
-    closing = cv2.morphologyEx(dilation, cv2.MORPH_CLOSE, kernel_5, iterations=2)
-               
+    kernel_5 = np.ones((5, 5), np.uint8)
+    closing = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel_5, iterations=7)
+    
+    opening = cv2.morphologyEx(closing, cv2.MORPH_OPEN, kernel_3, iterations=1)          
 
     # Search the image for contours
-    contours = cv2.findContours(closing, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
+    contours = cv2.findContours(opening, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
 
     # Get the biggest contour inside the image
     biggest_contours = max(contours, key=cv2.contourArea)
@@ -59,15 +62,23 @@ def aspect_ratio_extract(image : np.ndarray, debug : bool) :
     aspect_ratio = (w / h)
 
     # Draw the bounding box
-    bounding_boxes = cv2.rectangle(contour_pic, (x, y), (x + w, y + h), (255, 255, 255), 1) 
+    bounding_boxes = cv2.rectangle(image, (x, y), (x + w, y + h), (255, 255, 255), 3) 
 
     # Show the processing steps of the image
+    def showInMovedWindow(winname, img, x, y):
+        cv2.namedWindow(winname,cv2.WINDOW_NORMAL)        # Create a named window
+        cv2.moveWindow(winname, x, y)   # Move it to (x,y)
+        cv2.resizeWindow(winname, 300,800)
+        cv2.imshow(winname,img)
+        
+
+    
     if debug:
-        cv2.imshow('input', image)
-        cv2.imshow('mask', mask)
-        cv2.imshow('dilation', dilation)
-        cv2.imshow('closing', closing)
-        cv2.imshow('bounding_box', bounding_boxes)
+        #cv2.imshow('input', image)
+        showInMovedWindow('1mask', mask,0,10)
+        showInMovedWindow('2closing', closing,305,10)
+        showInMovedWindow('3opening', opening,610,10)
+        showInMovedWindow('4bounding_box', bounding_boxes,920,10)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
