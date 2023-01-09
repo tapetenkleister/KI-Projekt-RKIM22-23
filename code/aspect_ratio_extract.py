@@ -24,7 +24,7 @@ def aspect_ratio_extract(image : np.ndarray, debug : bool) :
 
     # Threshold of brown in HSV space
     lower_brown = np.array([1, 30, 0])
-    upper_brown = np.array([40, 255, 150])
+    upper_brown = np.array([40, 255, 90])
 
     # Find brown shades inside the image and display them as white in front of a black background
     mask = cv2.inRange(hsv, lower_brown, upper_brown)
@@ -36,8 +36,8 @@ def aspect_ratio_extract(image : np.ndarray, debug : bool) :
                 
 
     # Dilate and erode the image to close small holes inside the object
-    kernel_5 = np.ones((5, 5), np.uint8)
-    closing = cv2.morphologyEx(dilation, cv2.MORPH_CLOSE, kernel_5, iterations=6)
+    kernel_5 = np.ones((3, 3), np.uint8)
+    closing = cv2.morphologyEx(dilation, cv2.MORPH_CLOSE, kernel_5, iterations=2)
                
 
     # Search the image for contours
