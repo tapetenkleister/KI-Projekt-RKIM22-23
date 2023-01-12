@@ -130,6 +130,8 @@ dmypy.json
 data/
 *.csv
 *.jpg
+*.jpeg
 *.png
 analysis/
 data_small/
+old_code/

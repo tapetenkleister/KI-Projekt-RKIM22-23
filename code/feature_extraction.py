@@ -10,7 +10,7 @@ import seaborn as sns
 from aspect_ratio_extract import aspect_ratio_extract
 from hu_moment_extract import hu_moment_extract
 from cropper import cropper
-from seal_area import seal_area_extract
+from detect_red_seal import detect_red_seal
 Image = TypeVar('Image')
 ImageLabel = TypeVar('ImageLabel')
 Current_Date = datetime.datetime.today().strftime ('%d_%b_%Y_%H_%M_%S')
@@ -47,7 +47,7 @@ class BeerBottle():
         feature_csv = open('analysis/feature_list.csv', 'w')
         feature_row = []
 
-        header = ['Aspect Ratio', 'Hu_0', 'Hu_1', 'Hu_2', 'Cap_Hu_0', 'Cap_Hu_1', 'Cap_Hu_2','Label']
+        header = ['Aspect Ratio','seal_position', 'Hu_0', 'Hu_1', 'Hu_2', 'Cap_Hu_0', 'Cap_Hu_1', 'Cap_Hu_2','Label']
         nb_image = 0
 
         folder_list = os.listdir(
@@ -70,16 +70,16 @@ class BeerBottle():
                     scaled_height, scaled_width, _colour_channels = image.shape
 
                     # call functions to extract a feature from a single image
-                    x_y_w_h,aspect_ratio = aspect_ratio_extract(image,debug=True)
+                    x_y_w_h,aspect_ratio = aspect_ratio_extract(image,debug=False)
                     hu_moment_list = hu_moment_extract(image,x_y_w_h, top_part=0.0, debug=False)
                     cap_hu_moment_list = hu_moment_extract(image, x_y_w_h, top_part=0.3, debug=False)
-                    #seal_area = seal_area_extract(image, x_y_w_h, top_part=0.3, debug=False)
+                    #seal_area = seal_a rea_extract(image, x_y_w_h, top_part=0.3, debug=False)
+                    seal_position = detect_red_seal(image, x_y_w_h,top_part=0.5, debug=False)
 
                     #append all features to the row that is to be added
-                    feature_row.append([aspect_ratio, hu_moment_list[0],hu_moment_list[1],hu_moment_list[2],
+                    feature_row.append([aspect_ratio, seal_position, hu_moment_list[0],hu_moment_list[1],hu_moment_list[2],
                         cap_hu_moment_list[0],cap_hu_moment_list[1],cap_hu_moment_list[2],labeled_folder])
                     
-
 
                     
                         
@@ -104,7 +104,7 @@ class BeerBottle():
         feature_csv.close()
     
 
-test = BeerBottle(dir_path = "test_images",scale_fact= 0.5   )
+test = BeerBottle(dir_path = "data",scale_fact= 0.5   )
 test.processing(max_num_images=2000, debug= False)
 
 os.rename(r'analysis/feature_list.csv',r'analysis/feature_list_' + str(Current_Date) + '.csv')

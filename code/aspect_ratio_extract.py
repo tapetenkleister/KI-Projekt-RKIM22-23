@@ -61,9 +61,7 @@ def aspect_ratio_extract(image : np.ndarray, debug : bool) :
     # Calculate aspect ratio
     aspect_ratio = (w / h)
 
-    # Draw the bounding box
-    bounding_boxes = cv2.rectangle(image, (x, y), (x + w, y + h), (255, 255, 255), 3) 
-
+    
     # Show the processing steps of the image
     def showInMovedWindow(winname, img, x, y):
         cv2.namedWindow(winname,cv2.WINDOW_NORMAL)        # Create a named window
@@ -74,6 +72,9 @@ def aspect_ratio_extract(image : np.ndarray, debug : bool) :
 
     
     if debug:
+        # Draw the bounding box
+        bounding_boxes = cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 255), 1) 
+
         #cv2.imshow('input', image)
         showInMovedWindow('1mask', mask,0,10)
         showInMovedWindow('2closing', closing,305,10)

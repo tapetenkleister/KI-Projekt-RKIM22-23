@@ -60,7 +60,7 @@ class TestBeerImages():
                     scaled_height, scaled_width, _colour_channels = image.shape
 
                     # call functions to extract a feature from a single image
-                    x_y_w_h,aspect_ratio = aspect_ratio_extract(image,debug=True)
+                    x_y_w_h,aspect_ratio = aspect_ratio_extract(image,debug=False)
                     cropper(image, x_y_w_h,top_part=0.0,folder=labeled_folder,number=nb_image, path=self._dir_path+'_cropped')
                     
                     

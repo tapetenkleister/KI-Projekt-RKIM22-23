@@ -40,7 +40,7 @@ def hu_moment_extract(image, x_y_w_h : list[int,int,int,int],top_part : float = 
             
 
     binary = []
-    dst = cv2.threshold(grey, 120, 255, cv2.THRESH_BINARY)[1]
+    dst = cv2.threshold(grey, 130, 255, cv2.THRESH_BINARY)[1]
          
 
     # Calculate Moments
@@ -81,19 +81,5 @@ def hu_moment_extract(image, x_y_w_h : list[int,int,int,int],top_part : float = 
         cv2.destroyAllWindows()
 
     return hu_moment_list
-
-
-# if __name__ == '__main__':
-#     hu_gen = HU_Generator()
-#     hu, labels = hu_gen.hu_moment_process(
-#         show_debug_info=True)
-#     # print(np.ndim(hu))
-#     test = np.asarray(hu, dtype=object)
-#     test.flatten()
-#     test = np.squeeze(test, axis=None)
-
-#     print("Dimensions: ", np.ndim(test))
-#     print(labels)
-#     np.savetxt("test_hu.csv", test, delimiter=",")
 
     
