@@ -1,19 +1,15 @@
 from __future__ import annotations
 import cv2
 import os
-import datetime
 import sys
-import csv
-from typing import TypeVar
 from cropper import cropper
 from aspect_ratio_extract import aspect_ratio_extract
-
 
 class TestBeerImages():
     """TestBeerImages class used to crop the images used for testing e.g. in the CNN and save them for the CNN to predict
     """
 
-    def __init__(self, dir_path: str = "test_images", scale_fact: float = 0.1) -> None:
+    def __init__(self, dir_path: str = "code/test_images", scale_fact: float = 0.5) -> None:
         self._dir_path = dir_path
         self._scale_fact = scale_fact
         self._label_dict = {
@@ -42,46 +38,48 @@ class TestBeerImages():
 
         folder_list = os.listdir(
             self._dir_path) if load_folder[0] == "all" else load_folder
-
+        #Iterate throuh every folder inside the specified image classes folder
         for labeled_folder in folder_list:
             if True:
                     print('Folder: ',labeled_folder)
 
             for image_path in os.listdir(self._dir_path + '/' + labeled_folder):
                 try:
-                    
+                    #load image
                     print('Image No:',nb_image+1)
                     image = cv2.imread(self._dir_path + '/' +
                                     labeled_folder + '/' + image_path)
-               
-                    height, width, _colour_channels = image.shape
+
+                    #resize the image to a smaller scale for faster calculation
+                    height, width, _ = image.shape
                     image = cv2.resize(
                         image, (int(width*self._scale_fact), int(height*self._scale_fact)), interpolation=cv2.INTER_AREA)
-                    scaled_height, scaled_width, _colour_channels = image.shape
 
-                    # call functions to extract a feature from a single image
-                    x_y_w_h,aspect_ratio = aspect_ratio_extract(image,debug=False)
-                    cropper(image, x_y_w_h,top_part=0.0,folder=labeled_folder,number=nb_image, path=self._dir_path+'_cropped')
-                    
-                    
-                        
-                #stopping condition based on the given argument max_num_images   
+                    # call functions to extract a aspect from a single image and crop it
+                    x_y_w_h,_ = aspect_ratio_extract(image,debug=debug)
+                    cropper(image, x_y_w_h, top_part=0.0, folder=labeled_folder, number=nb_image, path=self._dir_path+'_cropped')
+      
+                    #stopping condition based on the given argument max_num_images   
                     if nb_image>=max_num_images-1:
                         folder_stop = True
                         break
                     nb_image += 1
+
                 except Exception as e:
                     print(e)
                     print("Error at image no:",nb_image+1,image_path)
                     break
+
             if folder_stop:
                 print('Finished with maximum number of images')
                 break
+
             else: 
                 print('Finished because running out of images or error')      
-     
     
-
-test = TestBeerImages(dir_path = "test_images",scale_fact= 0.5   )
+#calling the class to iterate through the given folder dir_path
+#to extract training features: 'code/data'
+#to extract test features: 'code/test_images'
+test = TestBeerImages(dir_path = "code/test_images",scale_fact= 0.5   )
 test.processing(debug= False)
 

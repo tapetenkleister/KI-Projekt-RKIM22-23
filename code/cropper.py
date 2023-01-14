@@ -1,17 +1,21 @@
-
 from __future__ import annotations
 import cv2
 import os
 
-
 def cropper(image,x_y_w_h,top_part,folder,number,path):
-        """Saves a cropped version of the image to the target path.
+        """
+        Crops an image based on the x_y_w_h coordinates provided and saves the cropped image to a specified path.
 
-        Args:
-            x_y_w_h (_type_): Information needed for cropping. 
+        Parameters:
+            image (np.ndarray): The image to be cropped
+            x_y_w_h (list[int,int,int,int]): Information needed for cropping, contains the x, y, width and height coordinates of the crop
+            top_part (float): the top part of the image to be cropped
+            folder (str): The folder name where the image is saved
+            number (int): The number of the image
+            path (str): The path where the image is saved
+        
         """        
         x,y,w,h = x_y_w_h
-
 
         if top_part != 0:
             cropped = image[y:y+(int(h*top_part)), x:x+w]
